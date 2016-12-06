@@ -15,15 +15,17 @@
     "build:browser": "npm run node-gyp configure build --asmjs=1",
     "test": "npm run build:all && npm run test:nobuild",
     "test:nobuild": "mocha --full-trace test/**/*.test.js",
+    "test:noasmjs": "npm run build:native && TEST_ASMJS=0 mocha --full-trace test/**/*.test.js",
     "install": "npm run autogypi && npm run build:native && npm run install-browser",
-    "install-browser": "test -e build/Release/nbind.js || which em++ 2>&1 > /dev/null && npm run build:browser",
-    "prepublish": "npm run build:browser"
+    "install-browser": "test -e build/Release/nbind.js || ! command -v emsdk 2>&1 > /dev/null || npm run build:browser",
+    "prepublish": "[ \"$CI\" = true ] || npm run build:browser"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "mocha": "^3.1.2",
-    "random-seed": "^0.3.0"
+    "random-seed": "^0.3.0",
+    "segfault-handler": "^1.0.0"
   },
   "dependencies": {
     "autogypi": "^0.2.2",

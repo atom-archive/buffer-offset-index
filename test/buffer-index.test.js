@@ -1,24 +1,28 @@
 require('segfault-handler').registerHandler()
 
 const assert = require('assert')
-const NativeBufferOffsetIndex = require('../src/entry-node');
-const AsmjsBufferOffsetIndex = require('../src/entry-browser');
 const ReferenceBufferOffsetIndex = require('./reference-buffer-offset-index');
 
 const randomSeed = require('random-seed');
 const seed = 42; //randomSeed.create()(Number.MAX_SAFE_INTEGER);
 
-[ {
+let passes = [];
+
+passes.push({
 
     name: 'native',
-    Implementation: NativeBufferOffsetIndex
+    Implementation: require('../src/entry-node')
 
-}, {
+});
+
+if (!process.env.TEST_ASMJS || process.env.TEST_ASMJS !== '0') passes.push({
 
     name: 'asmjs',
-    Implementation: AsmjsBufferOffsetIndex
+    Implementation: require('../src/entry-browser')
 
-} ].forEach(({ name, Implementation }) => {
+});
+
+passes.forEach(({ name, Implementation }) => {
 
     describe('BufferOffsetIndex (' + name + ')', () => {
 
