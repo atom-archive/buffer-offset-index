@@ -8,7 +8,7 @@ const seed = 42; //randomSeed.create()(Number.MAX_SAFE_INTEGER);
 
 let passes = [];
 
-passes.push({
+if (!process.env.TEST_NATIVE || process.env.TEST_NATIVE !== '0') passes.push({
 
     name: 'native',
     Implementation: require('../src/entry-node')
